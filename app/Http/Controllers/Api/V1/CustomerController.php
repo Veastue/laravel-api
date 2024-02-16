@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Http\Resources\V1\CustomerResource;
+use App\Http\Resources\V1\CustomerCollection;
 
 
 class CustomerController extends Controller
@@ -16,11 +18,10 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        // Retrieve all customers from the database
-        $customers = Customer::all();
-
-        // Return the customers as JSON response
-        return response()->json($customers);
+        //it assume the every customer is customerresource see postalCode is jason file
+        //return new CustomerCollection(Customer::all());
+        // we may use this for pagination
+        return new CustomerCollection(Customer::paginate());
     }
 
     public function create()
@@ -33,9 +34,9 @@ class CustomerController extends Controller
         // Logic to store a newly created customer in the database
     }
 
-    public function show($id)
+    public function show(Customer $customer)
     {
-        // Logic to retrieve the specified customer
+        return new CustomerResource($customer);
     }
 
     public function edit($id)
