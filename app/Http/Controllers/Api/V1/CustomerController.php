@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Http\Resources\V1\CustomerResource;
 use App\Http\Resources\V1\CustomerCollection;
 use App\Filters\V1\CustomerFilter;
+use App\Http\Requests\V1\StoreCustomerRequest;
 
 class CustomerController extends Controller
 {
@@ -22,14 +23,18 @@ class CustomerController extends Controller
         //return new CustomerCollection(Customer::all());
         // we may use this for pagination
         $filter = new CustomerFilter();
-        $queryItems = $filter->transform($request); // [['column', 'operator', 'value']]
-
-        if(count($queryItems) == 0){
-            return new CustomerCollection(Customer::paginate());
-        } else {
-            $costumers = Customer::where($queryItems)->paginate();
-            return new CustomerCollection($costumers->appends($request->query()));
+        $filterItems = $filter->transform($request); // [['column', 'operator', 'value']]
+        
+        $includeInvoices = $request->query('includeInvoices');
+        
+        $costumers = Customer::where($filterItems);
+        
+        if($includeInvoices){
+            $costumers = $costumers->with('invoices');
         }
+        return new CustomerCollection($costumers->paginate()->appends($request->query()));
+
+
     }
 
     public function create()
@@ -37,13 +42,17 @@ class CustomerController extends Controller
         // Logic to show the form for creating a new customer
     }
 
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
-        // Logic to store a newly created customer in the database
+        return new CustomerResource(Customer::create($request->all()));
     }
 
     public function show(Customer $customer)
     {
+        $includeInvoices = request()->query('includeInvoices');
+        if($includeInvoices){
+            return new CustomerResource($customer->loadMissing('invoices'));
+        }
         return new CustomerResource($customer);
     }
 
