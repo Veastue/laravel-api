@@ -7,8 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Http\Resources\V1\CustomerResource;
 use App\Http\Resources\V1\CustomerCollection;
-use App\Services\V1\CustomerQuery;
-
+use App\Filters\V1\CustomerFilter;
 
 class CustomerController extends Controller
 {
@@ -22,13 +21,14 @@ class CustomerController extends Controller
         //it assume the every customer is customerresource see postalCode is jason file
         //return new CustomerCollection(Customer::all());
         // we may use this for pagination
-        $filter = new CustomerQuery();
+        $filter = new CustomerFilter();
         $queryItems = $filter->transform($request); // [['column', 'operator', 'value']]
 
         if(count($queryItems) == 0){
             return new CustomerCollection(Customer::paginate());
         } else {
-            return new CustomerCollection(Customer::where($queryItems)->paginate());
+            $costumers = Customer::where($queryItems)->paginate();
+            return new CustomerCollection($costumers->appends($request->query()));
         }
     }
 
