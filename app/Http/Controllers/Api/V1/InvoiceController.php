@@ -8,6 +8,8 @@ use App\Models\Invoice;
 use App\Http\Resources\V1\InvoiceResource;
 use App\Http\Resources\V1\InvoiceCollection;
 use App\Filters\V1\InvoiceFilter;
+use Illuminate\Support\Arr;
+use App\Http\Requests\V1\BulkStoreInvoiceRequest;
 
 class InvoiceController extends Controller
 {
@@ -50,51 +52,38 @@ class InvoiceController extends Controller
      */
     public function store()
     {
-        //
+        
+    }
+    
+    public function bulkStore(BulkStoreInvoiceRequest $request)
+    {
+        $bulk = collect($request->all())->map(function($arr, $key){
+            return Arr::except($arr, ['customerId', 'billedDate', 'paidDate']);
+        });
+
+        Invoice::insert($bulk->toArray());
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
-     */
     public function show()
     {
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit()
     {
-        //
+        
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateInvoiceRequest  $request
-     * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
-     */
+
     public function update()
     {
-        //
+        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy()
     {
-        //
+        
     }
 }

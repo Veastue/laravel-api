@@ -9,6 +9,7 @@ use App\Http\Resources\V1\CustomerResource;
 use App\Http\Resources\V1\CustomerCollection;
 use App\Filters\V1\CustomerFilter;
 use App\Http\Requests\V1\StoreCustomerRequest;
+use App\Http\Requests\V1\UpdateCustomerRequest;
 
 class CustomerController extends Controller
 {
@@ -39,7 +40,7 @@ class CustomerController extends Controller
 
     public function create()
     {
-        // Logic to show the form for creating a new customer
+        
     }
 
     public function store(StoreCustomerRequest $request)
@@ -58,16 +59,16 @@ class CustomerController extends Controller
 
     public function edit($id)
     {
-        // Logic to show the form for editing the specified customer
+        
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Customer $customer)
     {
-        // Logic to update the specified customer in the database
+        $customer->update($request->all());
     }
 
     public function destroy($id)
     {
-        // Logic to remove the specified customer from the database
+        
     }
 }

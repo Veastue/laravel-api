@@ -25,6 +25,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::get('/test', function () {
         return 'This is a test route.';
     });
+
+    Route::post('invoices/bulk', ['uses' => 'InvoiceController@bulkStore']);
 });
 
 
