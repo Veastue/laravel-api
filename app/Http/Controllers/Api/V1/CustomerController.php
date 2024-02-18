@@ -13,11 +13,8 @@ use App\Http\Requests\V1\UpdateCustomerRequest;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function index(Request $request)
     {
         //it assume the every customer is customerresource see postalCode is jason file
@@ -35,18 +32,22 @@ class CustomerController extends Controller
         }
         return new CustomerCollection($costumers->paginate()->appends($request->query()));
 
-
     }
 
-    public function create()
-    {
-        
-    }
+
+
 
     public function store(StoreCustomerRequest $request)
     {
         return new CustomerResource(Customer::create($request->all()));
     }
+
+
+    public function update(UpdateCustomerRequest $request, Customer $customer)
+    {
+        $customer->update($request->all());
+    }
+
 
     public function show(Customer $customer)
     {
@@ -57,18 +58,7 @@ class CustomerController extends Controller
         return new CustomerResource($customer);
     }
 
-    public function edit($id)
-    {
-        
-    }
-
-    public function update(Request $request, Customer $customer)
-    {
-        $customer->update($request->all());
-    }
-
-    public function destroy($id)
-    {
+    public function destroy(){
         
     }
 }
